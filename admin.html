@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم عالم الترجمة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* تنسيقات إضافية للوحة التحكم فقط */
+        .admin-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #0A2342 0%, #2E5984 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .admin-nav {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: #0A2342;
+            color: white;
+            border-color: #0A2342;
+        }
+        
+        .admin-content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .login-section {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        /* باقي التنسيقات موجودة في style.css */
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-user-cog"></i> لوحة تحكم عالم الترجمة</h1>
+            <p>إدارة المقالات والمحتوى - الوصول للمسؤول فقط</p>
+        </div>
+        
+        <div class="admin-nav">
+            <button class="nav-btn active" onclick="showSection('articles')">
+                <i class="fas fa-newspaper"></i> المقالات
+            </button>
+            <button class="nav-btn" onclick="showSection('add-article')">
+                <i class="fas fa-plus-circle"></i> إضافة مقال جديد
+            </button>
+            <button class="nav-btn" onclick="showSection('settings')">
+                <i class="fas fa-cog"></i> الإعدادات
+            </button>
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-home"></i> العودة للموقع
+            </a>
+        </div>
+        
+        <div class="admin-content">
+            <!-- قسم المقالات -->
+            <div id="articles-section" class="section active">
+                <h2 style="color: #0A2342; margin-bottom: 25px;">
+                    <i class="fas fa-list"></i> المقالات المنشورة
+                </h2>
+                <div class="articles-list" id="articlesList">
+                    <!-- المقالات تظهر هنا عبر JavaScript -->
+                </div>
+            </div>
+            
+            <!-- قسم إضافة مقال -->
+            <div id="add-article-section" class="section">
+                <h2 style="color: #0A2342; margin-bottom: 25px;">
+                    <i class="fas fa-edit"></i> إضافة مقال جديد
+                </h2>
+                <form id="articleForm" class="article-form" style="max-width: 800px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label for="articleTitle"><i class="fas fa-heading"></i> عنوان المقال</label>
+                        <input type="text" id="articleTitle" class="form-control" required 
+                               placeholder="أدخل عنوان المقال هنا...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleContent"><i class="fas fa-file-alt"></i> محتوى المقال</label>
+                        <textarea id="articleContent" class="form-control" required 
+                                  placeholder="اكتب محتوى المقال هنا..." rows="10"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleImage"><i class="fas fa-image"></i> رابط الصورة (اختياري)</label>
+                        <input type="text" id="articleImage" class="form-control" 
+                               placeholder="https://example.com/image.jpg">
+                    </div>
+                    
+                    <div class="form-actions" style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> نشر المقال
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="showSection('articles')">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- قسم الإعدادات -->
+            <div id="settings-section" class="section">
+                <h2 style="color: #0A2342; margin-bottom: 25px;">
+                    <i class="fas fa-cogs"></i> إعدادات النظام
+                </h2>
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div class="article-card-main" style="padding: 20px;">
+                        <h3 class="article-title">معلومات النظام</h3>
+                        <p><strong>الإصدار:</strong> 1.0.0</p>
+                        <p><strong>عدد المقالات:</strong> <span id="articlesCount">0</span> مقال</p>
+                        <p><strong>آخر تحديث:</strong> <span id="lastUpdate">-</span></p>
+                    </div>
+                    
+                    <div class="article-card-main" style="padding: 20px; margin-top: 20px;">
+                        <h3 class="article-title">إجراءات النظام</h3>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="backupArticles()">
+                                <i class="fas fa-save"></i> نسخ احتياطي
+                            </button>
+                            <button class="btn" style="background: #dc3545; color: white;" onclick="clearAllArticles()">
+                                <i class="fas fa-trash"></i> حذف كل المقالات
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المقالات (تخزن في localStorage)
+        let articles = JSON.parse(localStorage.getItem('alamArticles')) || [];
+        
+        // عرض الأقسام
+        function showSection(sectionId) {
+            // إخفاء كل الأقسام
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            // إزالة النشاط من كل الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // إظهار القسم المطلوب
+            const targetSection = document.getElementById(sectionId + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+            }
+            
+            // تفعيل الزر المناسب
+            event.target.classList.add('active');
+            
+            // إذا كان قسم المقالات، نحدث القائمة
+            if (sectionId === 'articles') {
+                displayArticles();
+            } else if (sectionId === 'settings') {
+                updateStats();
+            }
+        }
+        
+        // عرض المقالات في لوحة التحكم
+        function displayArticles() {
+            const articlesList = document.getElementById('articlesList');
+            const articlesCount = document.getElementById('articlesCount');
+            
+            if (!articlesList) return;
+            
+            if (articles.length === 0) {
+                articlesList.innerHTML = `
+                    <div class="article-card-main" style="text-align: center; padding: 40px;">
+                        <i class="fas fa-newspaper" style="font-size: 3rem; color: #6c757d; margin-bottom: 20px;"></i>
+                        <h3 style="color: #6c757d;">لا توجد مقالات</h3>
+                        <p>قم بإضافة مقالتك الأولى!</p>
+                    </div>
+                `;
+                if (articlesCount) articlesCount.textContent = '0';
+                return;
+            }
+            
+            articlesList.innerHTML = articles.map((article, index) => `
+                <div class="article-card-main" style="margin-bottom: 20px;">
+                    <div class="article-content">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <h3 class="article-title" style="margin: 0;">${article.title}</h3>
+                            <span style="color: #6c757d; font-size: 0.9rem;">${article.date}</span>
+                        </div>
+                        <p class="article-excerpt">${article.content.substring(0, 150)}...</p>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn" style="background: #0A2342; color: white; padding: 8px 15px;" onclick="viewArticle(${index})">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                            <button class="btn" style="background: #ffc107; color: #212529; padding: 8px 15px;" onclick="editArticle(${index})">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                            <button class="btn" style="background: #dc3545; color: white; padding: 8px 15px;" onclick="deleteArticle(${index})">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            if (articlesCount) articlesCount.textContent = articles.length;
+        }
+        
+        // إضافة/تعديل مقال
+        document.getElementById('articleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('articleTitle').value;
+            const content = document.getElementById('articleContent').value;
+            const image = document.getElementById('articleImage').value;
+            const editIndex = this.dataset.editIndex;
+            
+            if (editIndex !== undefined) {
+                // تعديل مقال موجود
+                articles[editIndex] = {
+                    title,
+                    content,
+                    image: image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800',
+                    date: articles[editIndex].date,
+                    updated: new Date().toLocaleDateString('ar-EG')
+                };
+                delete this.dataset.editIndex;
+            } else {
+                // إضافة مقال جديد
+                articles.unshift({
+                    title,
+                    content,
+                    image: image || 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800',
+                    date: new Date().toLocaleDateString('ar-EG'),
+                    updated: null
+                });
+            }
+            
+            // حفظ في localStorage
+            localStorage.setItem('alamArticles', JSON.stringify(articles));
+            
+            // إعادة تعيين النموذج
+            this.reset();
+            
+            // العودة لقائمة المقالات
+            showSection('articles');
+            
+            // رسالة نجاح
+            alert(editIndex !== undefined ? 'تم تعديل المقال بنجاح!' : 'تم نشر المقال بنجاح!');
+        });
+        
+        // عرض مقال
+        function viewArticle(index) {
+            const article = articles[index];
+            const content = `
+                <h2>${article.title}</h2>
+                ${article.image ? `<img src="${article.image}" style="max-width:100%; border-radius:10px; margin:20px 0;">` : ''}
+                <div style="line-height: 1.8; font-size: 1.1rem; margin-top: 20px; white-space: pre-line;">
+                    ${article.content}
+                </div>
+                <p style="color: #6c757d; margin-top: 30px; border-top: 1px solid #dee2e6; padding-top: 15px;">
+                    <i class="fas fa-calendar"></i> نشر في: ${article.date}
+                    ${article.updated ? `<br><i class="fas fa-history"></i> آخر تحديث: ${article.updated}` : ''}
+                </p>
+            `;
+            
+            const articleWindow = window.open('', '_blank');
+            articleWindow.document.write(`
+                <!DOCTYPE html>
+                <html dir="rtl">
+                <head>
+                    <title>${article.title}</title>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <style>
+                        body { font-family: 'Cairo', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background: #f8f9fa; }
+                        .article-container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+                        h2 { color: #0A2342; margin-bottom: 20px; border-bottom: 3px solid #D4AF37; padding-bottom: 10px; }
+                        img { max-width: 100%; height: auto; border-radius: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="article-container">
+                        ${content}
+                    </div>
+                </body>
+                </html>
+            `);
+            articleWindow.document.close();
+        }
+        
+        // تعديل مقال
+        function editArticle(index) {
+            const article = articles[index];
+            
+            document.getElementById('articleTitle').value = article.title;
+            document.getElementById('articleContent').value = article.content;
+            document.getElementById('articleImage').value = article.image;
+            document.getElementById('articleForm').dataset.editIndex = index;
+            
+            showSection('add-article');
+        }
+        
+        // حذف مقال
+        function deleteArticle(index) {
+            if (confirm('هل أنت متأكد من حذف هذا المقال؟')) {
+                articles.splice(index, 1);
+                localStorage.setItem('alamArticles', JSON.stringify(articles));
+                displayArticles();
+                alert('تم حذف المقال بنجاح!');
+            }
+        }
+        
+        // تحديث الإحصائيات
+        function updateStats() {
+            const lastUpdate = document.getElementById('lastUpdate');
+            if (lastUpdate) {
+                lastUpdate.textContent = new Date().toLocaleDateString('ar-EG');
+            }
+        }
+        
+        // نسخ احتياطي
+        function backupArticles() {
+            const backup = JSON.stringify(articles, null, 2);
+            const blob = new Blob([backup], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `مقالات-عالم-الترجمة-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            alert('تم إنشاء النسخة الاحتياطية بنجاح!');
+        }
+        
+        // حذف كل المقالات
+        function clearAllArticles() {
+            if (confirm('هل أنت متأكد من حذف جميع المقالات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+                articles = [];
+                localStorage.removeItem('alamArticles');
+                displayArticles();
+                alert('تم حذف جميع المقالات!');
+            }
+        }
+        
+        // التحميل الأولي
+        document.addEventListener('DOMContentLoaded', function() {
+            displayArticles();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
